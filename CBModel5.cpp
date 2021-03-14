@@ -1,3 +1,4 @@
+
 /** The MIT License (MIT)
 
 Copyright (c) 2021 victor7376@github
@@ -21,38 +22,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "CBModel.h"
+#include "CBModel5.h"
 
-#define CBModel_FINGERPRINT "16 a5 01 0d a1 67 f5 f1 4f 99 9c dd 00 16 18 c5 97 9b b9 44"
+#define CHATURBATE_FINGERPRINT "16 a5 01 0d a1 67 f5 f1 4f 99 9c dd 00 16 18 c5 97 9b b9 44"
 
-CBModel::CBModel(String username)
+CBModel5::CBModel5(String username5)
 {
-  myUsername = username;
+  myUsername5 = username5;
 }
 
-void CBModel::updateDetails(String username)
-{
-  myUsername = username;
+void CBModel5::updateDetails5(String username5){
+
+  myUsername5 = username5;
 }
 
-void CBModel::getDetails(){
+void CBModel5::getDetails5(){
 
       WiFiClientSecure modelClient;
-      modelClient.setFingerprint(CHATURBATE_FINGERPRINT);
+      #ifdef ESP32
+      #else
+        modelClient.setFingerprint(CHATURBATE_FINGERPRINT);
+      #endif
       
       if (WiFi.status() == WL_CONNECTED) {
         Serial.println(F("Connecting to Chaturbate..."));
       if (!modelClient.connect("chaturbate.com", 443)) {
         Serial.println(F("Failed to connect to Chaturbate"));
-        resetData();
+        
+        resetData5(); // reset data
         return;
       }
       Serial.println(F("Connected to Chaturbate"));
     
       Serial.println(F("Sending request to Chaturbate..."));
       // Send HTTP request
-      modelClient.println("GET /api/chatvideocontext/" + myUsername + "/" + " HTTP/1.0");
-      Serial.println("GET /api/chatvideocontext/" + myUsername + "/" + " HTTP/1.1");
+      modelClient.println("GET /api/chatvideocontext/" + myUsername5 + "/" + " HTTP/1.0");
+      Serial.println("GET /api/chatvideocontext/" + myUsername5 + "/" + " HTTP/1.1");
       modelClient.println(F("Host: chaturbate.com"));
       modelClient.println(F("User-Agent: Arduino"));
       modelClient.println(F("Connection: close"));
@@ -66,7 +71,8 @@ void CBModel::getDetails(){
       if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
         Serial.print("Unexpected HTTP status");
         Serial.println(status);
-        resetData();
+        
+        resetData5(); // reset data
         return;
       }
 
@@ -74,10 +80,11 @@ void CBModel::getDetails(){
 
       // Skip response headers
       modelClient.find("\r\n\r\n");
-      resetData();
+      
+      resetData5(); // reset data
 
       // CB v5
-      const size_t bufferSize = 2*JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(0) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(16) + JSON_OBJECT_SIZE(58) + 2873;
+      const size_t bufferSize = 2*JSON_ARRAY_SIZE(0) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(16) + JSON_OBJECT_SIZE(58) + 2748;
       
       DynamicJsonBuffer jsonBuffer(bufferSize);
       JsonObject& root = jsonBuffer.parseObject(modelClient);
@@ -87,40 +94,33 @@ void CBModel::getDetails(){
         return;
       }
 
-      const char* broadcaster = root["broadcaster_username"];
-      int num_viewers = root["num_viewers"];
-      const char* room_status = root["room_status"];
+      const char* CBModel5 = root["broadcaster_username"];
+      const char* CBModel5Status = root["room_status"];
 
-      modelData.broadcaster = (const char*)root["broadcaster_username"];
-      modelData.numviewers = (const char*)root["num_followers"];
-      modelData.roomstatus = (const char*)root["token_balance"];
+      CBModel5Data.CBModel5 = (const char*)root["broadcaster_username"];
+      CBModel5Data.CBModel5Status = (const char*)root["room_status"];
 
-      Serial.print("Model:");
-      Serial.println(broadcaster);
-      Serial.print("Room Status:");
-      Serial.println(room_status);
-      Serial.print("Viewers:"); 
-      Serial.println(num_viewers);
+      Serial.print("Model (5):");
+      Serial.println(CBModel5);
+      Serial.print("Status (5):");
+      Serial.println(CBModel5Status);
       
     }
     modelClient.stop();
 }
 
-String CBModel::getNumViewers(){
-  return modelData.numviewers;
+
+String CBModel5::getCBModel5(){
+  return CBModel5Data.CBModel5;
 }
 
-String CBModel::getBroadcaster(){
-  return modelData.broadcaster;
+String CBModel5::getCBModel5Status(){
+  return CBModel5Data.CBModel5Status;
 }
 
-String CBModel::getRoomStatus(){
-  return modelData.roomstatus;
-}
 
 // Reset all ChaturbateData
-void CBModel::resetData() {
-  modelData.numviewers = "";
-  modelData.broadcaster = "";
-  modelData.roomstatus = "";
+void CBModel5::resetData5() {
+  CBModel5Data.CBModel5 = "";
+  CBModel5Data.CBModel5Status = "";
 }
