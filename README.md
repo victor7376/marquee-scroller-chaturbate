@@ -1,9 +1,12 @@
 # marquee-scroller-chaturbate
-A Marquee scroller with Time, weather &amp; info on your favourite Chaturbate Model
+A Marquee scroller with Time &amp; info on your top 5 Chaturbate Models
 
 This Scrolling Marquee is virtually identical to:
+
 https://github.com/victor7376/marquee-scroller
 
-With one slight difference, this one scrolls information regarding your 1 (ONLY ONE) favourite Chaturbate
-Model, status of if they are online or not and if they are how many viewers they have at that moment.
+With one slight difference, this one scrolls information regarding 5 of your favourite Chaturbate
+Models, status of if they are online or not.
+
+
 
