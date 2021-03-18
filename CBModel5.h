@@ -42,7 +42,10 @@ class CBModel5
     void getDetails5();
     String getCBModel5();
     String getCBModel5Status();
-   
+    String getCBModel5code();
+    String getCBModel5NumViewers();
+    String getError();
+    boolean isPassword();
 
   private:
     const char* servername = "chaturbate.com";
@@ -53,6 +56,9 @@ class CBModel5
   typedef struct {
     String CBModel5;
     String CBModel5Status;
+    String CBModel5code;
+    String CBModel5NumViewers;
+    String error;
   } CBModel5Struct;
 
   CBModel5Struct CBModel5Data;

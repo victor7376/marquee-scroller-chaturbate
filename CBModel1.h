@@ -22,35 +22,45 @@ SOFTWARE.
 */
 
 #pragma once
-#include <ESP8266WiFi.h>
 #include "libs/ArduinoJson/ArduinoJson.h"
 #include <WiFiClientSecure.h>
-#include "CBModel_Fingerprint.h"
+//#include "Chaturbate_fingerprint.h"
+
+#ifdef ESP32
+  #include <WiFi.h>
+#else
+  #include <ESP8266WiFi.h>
+#endif
 
 
-class CBModel
+class CBModel1
 {
   
   public:
-    CBModel(String username);
+    CBModel1(String username);
     void updateDetails(String username);
     void getDetails();
-    String getBroadcaster();
-    String getNumViewers();
-    String getRoomStatus();
+    String getCBModel1();
+    String getCBModel1Status();
+    String getCBModel1code();
+    String getCBModel1NumViewers();
+    String getError();
+    boolean isPassword();
    
 
   private:
     const char* servername = "chaturbate.com";
     String myUsername;
 
-    void resetData();
+    void resetCBModel1Data();
 
   typedef struct {
-    String numviewers;
-    String broadcaster;
-    String roomstatus;
-  } ModelStruct;
+    String CBModel1;
+    String CBModel1Status;
+    String CBModel1code;
+    String CBModel1NumViewers;
+    String error;
+  } CBModel1Struct;
 
-  ModelStruct modelData;
+  CBModel1Struct CBModel1Data;
 };

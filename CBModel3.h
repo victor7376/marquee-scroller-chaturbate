@@ -42,6 +42,10 @@ class CBModel3
     void getDetails3();
     String getCBModel3();
     String getCBModel3Status();
+    String getCBModel3code();
+    String getCBModel3NumViewers();
+    String getError();
+    boolean isPassword();
    
 
   private:
@@ -53,6 +57,9 @@ class CBModel3
   typedef struct {
     String CBModel3;
     String CBModel3Status;
+    String CBModel3code;
+    String CBModel3NumViewers;
+    String error;
   } CBModel3Struct;
 
   CBModel3Struct CBModel3Data;

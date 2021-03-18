@@ -70,6 +70,8 @@ void CBModel2::getDetails2(){
       if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
         Serial.print("Unexpected HTTP status");
         Serial.println(status);
+        CBModel2Data.error = String(status);
+        
         resetData2();
         return;
       }
@@ -93,14 +95,20 @@ void CBModel2::getDetails2(){
 
       const char* CBModel2 = root["broadcaster_username"];
       const char* CBModel2Status = root["room_status"];
+      const char* CBModel2code = root["code"];
+      int CBModel2NumViewers = root["num_viewers"];
 
       CBModel2Data.CBModel2 = (const char*)root["broadcaster_username"];
       CBModel2Data.CBModel2Status = (const char*)root["room_status"];
+      CBModel2Data.CBModel2code = (const char*)root["code"];
+      CBModel2Data.CBModel2NumViewers = (const char*)root["num_viewers"];
 
       Serial.print("Model (2):");
       Serial.println(CBModel2);
       Serial.print("Status (2):");
       Serial.println(CBModel2Status);
+      Serial.print("Viewers (2): ");
+      Serial.println(CBModel2NumViewers);
       
     }
     modelClient.stop();
@@ -115,9 +123,29 @@ String CBModel2::getCBModel2Status(){
   return CBModel2Data.CBModel2Status;
 }
 
+String CBModel2::getCBModel2code(){
+  return CBModel2Data.CBModel2code;
+}
+
+String CBModel2::getCBModel2NumViewers(){
+  return CBModel2Data.CBModel2NumViewers;
+}
+
+String CBModel2::getError() {
+  return CBModel2Data.error;
+}
+
+boolean CBModel2::isPassword() {
+  boolean password = false;
+  if (CBModel2Data.error == "HTTP/1.1 401 Unauthorized") {
+    password = true;
+  }
+  return password;
+}
 
 // Reset all ChaturbateData
 void CBModel2::resetData2() {
   CBModel2Data.CBModel2 = "";
   CBModel2Data.CBModel2Status = "";
+  CBModel2Data.CBModel2code = "";
 }

@@ -69,8 +69,9 @@ void CBModel5::getDetails5(){
       modelClient.readBytesUntil('\r', status, sizeof(status));
       Serial.println("Response Header: " + String(status));
       if (strcmp(status, "HTTP/1.1 200 OK") != 0) {
-        Serial.print("Unexpected HTTP status");
+        Serial.print("Unexpected HTTP status: ");
         Serial.println(status);
+        CBModel5Data.error = String(status);
         
         resetData5(); // reset data
         return;
@@ -96,14 +97,20 @@ void CBModel5::getDetails5(){
 
       const char* CBModel5 = root["broadcaster_username"];
       const char* CBModel5Status = root["room_status"];
+      const char* CBModel5code = root["code"];
+      int CBModel5NumViewers = root["num_viewers"];
 
       CBModel5Data.CBModel5 = (const char*)root["broadcaster_username"];
       CBModel5Data.CBModel5Status = (const char*)root["room_status"];
+      CBModel5Data.CBModel5code = (const char*)root["code"];
+      CBModel5Data.CBModel5NumViewers = (const char*)root["num_viewers"];
 
-      Serial.print("Model (5):");
+      Serial.print("Model (5): ");
       Serial.println(CBModel5);
-      Serial.print("Status (5):");
+      Serial.print("Status (5): ");
       Serial.println(CBModel5Status);
+      Serial.print("Viewers (5): ");
+      Serial.println(CBModel5NumViewers);
       
     }
     modelClient.stop();
@@ -118,9 +125,30 @@ String CBModel5::getCBModel5Status(){
   return CBModel5Data.CBModel5Status;
 }
 
+String CBModel5::getCBModel5code(){
+  return CBModel5Data.CBModel5code;
+}
+
+String CBModel5::getCBModel5NumViewers(){
+  return CBModel5Data.CBModel5NumViewers;
+}
+
+String CBModel5::getError() {
+  return CBModel5Data.error;
+}
+
+boolean CBModel5::isPassword() {
+  boolean password = false;
+  if (CBModel5Data.error == "HTTP/1.1 401 Unauthorized") {
+    password = true;
+  }
+  return password;
+}
 
 // Reset all ChaturbateData
 void CBModel5::resetData5() {
   CBModel5Data.CBModel5 = "";
   CBModel5Data.CBModel5Status = "";
+  CBModel5Data.CBModel5code = "";
+  CBModel5Data.CBModel5NumViewers = "";
 }

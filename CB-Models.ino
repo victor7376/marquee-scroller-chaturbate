@@ -34,20 +34,21 @@ const char* password = "YOURSSIDPASSWORDHERE";  // Your SSID / WiFi Password
 //=====================================================================================
 
 //================================ TimezoneDB Settings ================================
-String TIMEDBKEY = "YOURAPIKEYHERE"; // Your API Key from https://timezonedb.com/register
+String TIMEDBKEY = "YOURKEYHERE"; // Your API Key from https://timezonedb.com/register
 
 // Location taaken from TimezoneDB - can be taken from the homepage
-String LAT = "YOURLAT";          // Latitude
-String LON = "YOURLONG";          // Longitude
+String LAT = "YOURLATHERE";          // Latitude
+String LON = "YOURLONHERE";          // Longitude
 //=====================================================================================
 
 //================================ Chaturbate Settings ================================
-boolean CHATURBATE_ENABLED = false;            // change to true if you want it enabled
-String CBModel1Username = "";       // enter Model (1) username from Chaturbate
-String CBModel2Username2 = "";      // enter Model (2) username from Chaturbate
+boolean CHATURBATE_ENABLED = true;            // change to true if you want it enabled
+String CBModel1Username = "";      // enter Model (1) username from Chaturbate
+String CBModel2Username2 = "";       // enter Model (2) username from Chaturbate
 String CBModel3Username3 = "";      // enter Model (3) username from Chaturbate
-String CBModel4Username4 = "";      // enter Model (4) username from Chaturbate
-String CBModel5Username5 = "";      // enter Model (4) username from Chaturbate
+String CBModel4Username4 = "";  // enter Model (4) username from Chaturbate
+String CBModel5Username5 = "";                // enter Model (5) username from Chaturbate
+boolean Show_Viewers = true;                  // Change to false if you just want online or offline
 //=====================================================================================
 
 /* Useful Constants */
@@ -63,7 +64,7 @@ String CBModel5Username5 = "";      // enter Model (4) username from Chaturbate
 const int pinCS = D6; // Attach CS to this pin, DIN to MOSI and CLK to SCK (cf http://arduino.cc/en/Reference/SPI )
 
 // Here you can choose how many displays you have - Displays come in a set of 4, so double would be 8 etc
-const int numberOfHorizontalDisplays = 8; // default 8 for standard 4 x 1 display Max size of 24 works
+const int numberOfHorizontalDisplays = 8; // default 4 for standard 4 x 1 display Max size of 24 works
 const int numberOfVerticalDisplays = 1; // default 1 for a single row height
 
 int displayIntensity = 1;  //(This can be set from 0 - 15) - how bright you want the display
@@ -74,8 +75,8 @@ boolean flashOnSeconds = true; // when true the : character in the time will fla
 boolean IS_24HOUR = true; // 23:00 millitary 24 hour clock
 boolean IS_PM = true; // Show PM indicator on Clock when in AM/PM mode
 int ledRotation = 3;
-String timeDisplayTurnsOn = "06:30";  // 24 Hour Format HH:MM -- Leave blank for always on. (ie 05:30)
-String timeDisplayTurnsOff = "23:00"; // 24 Hour Format HH:MM -- Leave blank for always on. Both must be set to work.
+String timeDisplayTurnsOn = "08:30";  // 24 Hour Format HH:MM -- Leave blank for always on. (ie 05:30)
+String timeDisplayTurnsOff = "22:30"; // 24 Hour Format HH:MM -- Leave blank for always on. Both must be set to work.
 String marqueeMessage = "";           // Custom Message if wanted
 
 // LED Settings
@@ -247,55 +248,130 @@ void loop() {
         if (CBModel1Username == "") {
 
         } else {
-          msg += "- " + cbmodel1.getCBModel1() + " is ";
-          if (cbmodel1.getCBModel1Status() == "public" || cbmodel1.getCBModel1Status() == "group" || cbmodel1.getCBModel1Status() == "private") {
-          msg += "online ";
-          } else {
-          msg += "offline "; 
+          msg += " " + cbmodel1.getCBModel1() + " ";
+          if (cbmodel1.getCBModel1Status() == "public") {
+            msg += "is online ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel1.getCBModel1NumViewers() + " Viewers ";
+              }
+          } else if (cbmodel1.getCBModel1Status() == "private") {
+            msg += "is in a private ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel1.getCBModel1NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel1.getCBModel1Status() == "group") {
+            msg += "is in a group ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel1.getCBModel1NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel1.getCBModel1Status() == "offline"){
+          msg += "is offline "; 
+          } else if (cbmodel1.isPassword() == true) {
+            msg +=  CBModel1Username + " is passworded";
           }
         }
         // CB2
         if (CBModel2Username2 == "") {
 
         } else {
-          msg += "- " + cbmodel2.getCBModel2() + " is ";
-          if (cbmodel2.getCBModel2Status() == "public" || cbmodel2.getCBModel2Status() == "group" || cbmodel2.getCBModel2Status() == "private") {
-          msg += "online ";
-          } else {
-          msg += "offline "; 
+          msg += "- " + cbmodel2.getCBModel2() + " ";
+          if (cbmodel2.getCBModel2Status() == "public") {
+            msg += "is online ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel2.getCBModel2NumViewers() + " Viewers ";
+              }
+          } else if (cbmodel2.getCBModel2Status() == "private") {
+            msg += "is in a private ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel2.getCBModel2NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel2.getCBModel2Status() == "group") {
+            msg += "is in a group ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel2.getCBModel2NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel2.getCBModel2Status() == "offline"){
+          msg += "is offline "; 
+          } else if (cbmodel2.isPassword() == true) {
+            msg +=  CBModel2Username2 + " is passworded";
           }
         }
         // CB3
         if (CBModel3Username3 == "") {
 
         } else {
-          msg += "- " + cbmodel3.getCBModel3() + " is ";
-          if (cbmodel3.getCBModel3Status() == "public" || cbmodel3.getCBModel3Status() == "group" || cbmodel3.getCBModel3Status() == "private") {
-          msg += "online ";
-          } else {
-          msg += "offline "; 
+          msg += "- " + cbmodel3.getCBModel3() + " ";
+          if (cbmodel3.getCBModel3Status() == "public") {
+            msg += "is online ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel3.getCBModel3NumViewers() + " Viewers ";
+              }
+          } else if (cbmodel3.getCBModel3Status() == "private") {
+            msg += "is in a private ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel3.getCBModel3NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel3.getCBModel3Status() == "group") {
+            msg += "is in a group ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel3.getCBModel3NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel3.getCBModel3Status() == "offline"){
+          msg += "is offline "; 
+          } else if (cbmodel3.isPassword() == true) {
+            msg +=  CBModel3Username3 + " is passworded";
           }
         }
         // CB4
         if (CBModel4Username4 == "") {
 
         } else {
-          msg += "- " + cbmodel4.getCBModel4() + " is ";
-          if (cbmodel4.getCBModel4Status() == "public" || cbmodel4.getCBModel4Status() == "group" || cbmodel4.getCBModel4Status() == "private") {
-          msg += "online ";
-          } else {
-          msg += "offline "; 
+          msg += "- " + cbmodel4.getCBModel4() + " ";
+          if (cbmodel4.getCBModel4Status() == "public") {
+            msg += "is online ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel4.getCBModel4NumViewers() + " Viewers ";
+              }
+          } else if (cbmodel4.getCBModel4Status() == "private") {
+            msg += "is in a private ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel4.getCBModel4NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel4.getCBModel4Status() == "group") {
+            msg += "is in a group ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel4.getCBModel4NumViewers() + " Viewers ";
+              }  
+          } else if (cbmodel4.getCBModel4Status() == "offline"){
+          msg += "is offline "; 
+          } else if (cbmodel4.isPassword() == true) {
+            msg +=  CBModel4Username4 + " is passworded";
           }
         }
         // CB5
         if (CBModel5Username5 == "") {
 
         } else {
-          msg += "- " + cbmodel5.getCBModel5() + " is ";
-          if (cbmodel5.getCBModel5Status() == "public" || cbmodel5.getCBModel5Status() == "group" || cbmodel5.getCBModel5Status() == "private") {
-          msg += "online ";
-          } else {
-          msg += "offline "; 
+            msg += "- " + cbmodel5.getCBModel5() + " ";
+          if (cbmodel5.getCBModel5Status() == "public") {
+            msg += "is online ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel5.getCBModel5NumViewers() + " Viewers ";
+              }
+          } else if (cbmodel5.getCBModel5Status() == "private") {
+            msg += "is in a private ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel5.getCBModel5NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel5.getCBModel5Status() == "group") {
+            msg += "is in a group ";
+              if (Show_Viewers == true) {
+                msg += "with " + cbmodel5.getCBModel5NumViewers() + " Viewers ";
+              } 
+          } else if (cbmodel5.getCBModel5Status() == "offline"){
+          msg += "is offline "; 
+          } else if (cbmodel5.isPassword() == true) {
+            msg +=  CBModel5Username5 + " is passworded";
           }
         }
       } // end of CB section
